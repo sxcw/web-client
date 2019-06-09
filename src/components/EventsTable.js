@@ -8,20 +8,45 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 class EventsTable extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            events: []
+        };
+    }
+
+    componentDidMount() {
+        fetch('http://localhost:3000/api/events?userId=-1')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                this.setState({ events: data.Items });
+            });
+
+    }
+
     render() {
+        const tableContent = this.state.events.map(event => {
+            return (<TableRow>
+                <TableCell>
+                    {event.eventName}
+                </TableCell>
+                <TableCell>
+                    {event.startTime}
+                </TableCell>
+            </TableRow>);
+        });
         return (
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Date</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell>Ship To</TableCell>
-                        <TableCell>Payment Method</TableCell>
-                        <TableCell align="right">Sale Amount</TableCell>
+                        <TableCell>Start</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    
+                    {tableContent}
                 </TableBody>
             </Table>
         );
