@@ -4,9 +4,13 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
     fab: {
+        margin: theme.spacing(1),
+    },
+    button: {
         margin: theme.spacing(1),
     },
     form: {
@@ -41,7 +45,8 @@ function NewEventForm(props) {
     const [open, setOpen] = useState(false);
     const [modalStyle] = useState(getModalStyle);
     const [values, setValues] = useState({
-        eventName: ''
+        eventName: '',
+        startTime: new Date().toISOString()
     });
     const classes = useStyles();
 
@@ -57,6 +62,23 @@ function NewEventForm(props) {
         setOpen(false);
         setValues({ eventName: '' });
     };
+
+    const handleSubmit = () => {
+        const url = 'http://localhost:3000/api/events';
+        const data = { ...values, userId: -1 };
+
+        fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(response => {
+                handleClose();
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
     return (
         [
@@ -76,6 +98,9 @@ function NewEventForm(props) {
                         onChange={handleChange('eventName')}
                         margin="normal"
                     />
+                    <Button onClick={handleSubmit} variant="contained" color="primary" className={classes.button}>
+                        Add
+                    </Button>
                 </form>
             </Modal>
         ]
