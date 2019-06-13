@@ -76,16 +76,18 @@ function NewEventForm(props) {
         }).then(res => res.json())
             .then(response => {
                 handleClose();
+                props.fetchEvents(props.setEvents);
             })
             .catch(error => console.error('Error:', error));
     }
 
     return (
         [
-            <Fab color="primary" aria-label="Add" className={classes.fab} onClick={handleOpen}>
+            <Fab key="add-icon" color="primary" aria-label="Add" className={classes.fab} onClick={handleOpen}>
                 <AddIcon />
             </Fab>,
             <Modal
+                key="form-modal"
                 open={open}
                 onClose={handleClose}
             >
