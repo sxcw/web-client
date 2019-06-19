@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Modal from '@material-ui/core/Modal';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import EventNameAutocompleteInput from './EventNameAutocompleteInput';
 
 const useStyles = makeStyles(theme => ({
     fab: {
@@ -50,7 +50,9 @@ function NewEventForm(props) {
     });
     const classes = useStyles();
 
-    const handleChange = attribute => event => {
+    const handleChange = attribute => (event, params) => {
+        event.preventDefault();
+        console.log('handleChange', event, params);
         setValues({ ...values, [attribute]: event.target.value });
     };
 
@@ -63,7 +65,8 @@ function NewEventForm(props) {
         setValues({ eventName: '' });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
         const url = 'http://localhost:3000/api/events';
         const data = { ...values, userId: -1 };
 
@@ -91,14 +94,12 @@ function NewEventForm(props) {
                 open={open}
                 onClose={handleClose}
             >
-                <form style={modalStyle} className={classes.form} noValidate autoComplete="off">
-                    <TextField
-                        id="event-name"
-                        label="Event Name"
+                <form style={modalStyle} className={classes.form} noValidate autoComplete="off" onSubmit={handleSubmit}>
+                    <EventNameAutocompleteInput
                         className={classes.textField}
                         value={values.eventName}
                         onChange={handleChange('eventName')}
-                        margin="normal"
+                        autoCompleteLabels={props.events.map((event) => { return { label: event.eventName }; })}
                     />
                     <Button onClick={handleSubmit} variant="contained" color="primary" className={classes.button}>
                         Add

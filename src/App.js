@@ -13,6 +13,7 @@ const fetchEvents = (callback) => {
               callback(data.Items);
           });
 }
+
 function App() {
   const [events, setEvents] = useState([]);
 
@@ -22,7 +23,7 @@ function App() {
       <header className="App-header">
         <EventsTable events={events} />
       </header>
-      <NewEventForm fetchEvents={fetchEvents} setEvents={setEvents} />
+      <NewEventForm events={events} fetchEvents={fetchEvents} setEvents={setEvents} />
     </div>
   );
 }
